@@ -5,3 +5,20 @@ Building a testbed is an important part of anyone who is interested in learning 
 
 
 This project is made with the goal of providing a simple and economical way to implement an IoT testbed using serveral raspberry pis, a network switch or a wifi accesspoint and several IoT development boards (such as ESP3, ESP8266, etc.). 
+
+## Ansible collection built specific for raspberry pi's using raspbian/armbian
+
+This ansible collection is made to build an IoT Testbed using Raspberry Pis running Raspbian Linux
+
+The roles that will be built:
+- Testbed Configurator
+- Docker installer
+- Mosquitto installer
+- Nanomq installer
+- Influxdb installer
+- Grafana installer
+
+Special Roles:
+- Experiment configurator
+- Data collector
+- Endpoint Firmware OTA automation
