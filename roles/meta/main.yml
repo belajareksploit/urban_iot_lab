@@ -1,0 +1,17 @@
+# Galaxy info for this role
+galaxy_info:
+  author:
+  description:
+  company:
+  license: MIT
+
+  min_ansible_version:
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+
+    galaxy_tags:
+
+dependencies: []
