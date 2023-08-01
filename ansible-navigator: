@@ -1,0 +1,9 @@
+ansible:
+  inventory:
+        entries:
+        - ~/urban_iot_lab/inventory
+  logging:
+    level: debug
+  mode: stdout
+  playbook-artifact:
+    save-as: ~/{playbook_name}-artifact-{time_stamp}.json
