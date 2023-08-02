@@ -1,0 +1,7 @@
+# Inventory file for testing roles
+all:
+  children:
+    iot-staging-raspberrypi:
+      hosts:
+        192.168.2.102
+  vars:

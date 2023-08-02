@@ -1,0 +1,7 @@
+---
+timezone: 'Europe/London'
+port_mqtt: 1883
+port_websocket: 9001
+allow_anonymous: 'true'
+
+#Must add mqtt security vars here!

@@ -1,1 +1,16 @@
+# Adopted from Jeff Gerling's Ansible Docker ARM role
+# Default vars file for docker role
 ---
+docker_version: "latest"
+
+# Whether to install recommended packages alongside docker-ce.
+docker_install_recommends: false
+
+# Whether to install Docker Compose via Pip.
+docker_install_compose: true
+
+# A list of users who will be added to the docker group.
+docker_users: []
+
+# The executable to use for Pip.
+docker_pip_executable: pip3

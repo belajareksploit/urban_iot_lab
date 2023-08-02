@@ -1,75 +1,50 @@
+#adapted from Jeff Gerlings ansible-role-docker_arm
+
 ---
-# Docker installation steps according to official documentation
-- name: Check and wait for apt to unlock
-  become: true
-  shell:  while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
-  tags:
-    - docker
+- name: Check if Docker is already present.
+  command: which docker
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  register: docker_command_result
 
-- name: Install dependencies
-  apt:
-    name: ['apt-transport-https','ca-certificates', 'curl', 'software-properties-common','python3-pip']
-    state: present
-    update_cache: yes
-  tags:
-    - docker
-
-- name: Adding Official Docker s GPG key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-  tags:
-    - docker
-
-- name: Adding the Docker for ubuntu (stable)
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release  }} stable
-    state: present
-    update_cache: yes
-  tags:
-    - docker
-
-- name: Updating apt
-  apt:
-    update_cache: yes
-  tags:
-    - docker
-
-- name: Install docker-ce
-  apt:
-    name: docker-ce
-    state: present
-    update_cache: yes
-  tags:
-    - docker
-
-- name: Adding the latest release URL for docker-compose
-  uri:
-    url: "https://api.github.com/repos/docker/compose/releases/latest"
-    return_content: yes
-    status_code: 200
-  register: release_url
-
-- name: Latest docker-compose version
-  debug:
-    msg: "{{ release_url.json.tag_name }}"
-
-- name: Download the docker-compose binary file
+- name: Download Docker install convenience script.
   get_url:
-    url: "{{ release_url.json.assets | selectattr('name', 'match', 'docker-compose-linux-x86_64') | map(attribute='browser_download_url') | list | first }}"
-    dest: /usr/local/bin/docker-compose
-    mode: 'u+x,g+x'
-  tags:
-    - docker
+    url: https://get.docker.com/
+    dest: /tmp/get-docker.sh
+    mode: 0775
+  when: docker_command_result.rc == 1
 
-- name: Install Docker Module for Python
-  pip:
+- name: Run Docker install convenience script.
+  command: /tmp/get-docker.sh
+  environment:
+    CHANNEL: stable
+  when: docker_command_result.rc == 1
+
+- name: Make sure Docker CE is the version specified.
+  apt:
+    name: "docker-ce={{ docker_version }}"
+    state: present
+    force: true
+    install_recommends: "{{ docker_install_recommends }}"
+  when: docker_version != 'latest'
+
+- name: Ensure Docker is started.
+  service:
     name: docker
-  tags:
-    - docker
+    state: started
+    enabled: true
 
-- name: Install docker-compose Module for Python
+- name: Install Docker Compose using Pip.
   pip:
     name: docker-compose
-  tags:
-    - docker
+    state: present
+    executable: "{{ docker_pip_executable }}"
+  when: docker_install_compose | bool
+
+- name: Ensure docker users are added to the docker group.
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  with_items: "{{ docker_users }}"

@@ -14,11 +14,11 @@ The roles that will be built:
 - Testbed Configurator
 - Docker installer
 - Mosquitto installer
-- Nanomq installer
+- Nanomq installer 
 - Influxdb installer
 - Grafana installer
 
-Special Roles:
+Special Experimentation Roles:
 - Experiment configurator
 - Data collector
 - Endpoint Firmware OTA automation

@@ -1,2 +1,4 @@
 # Dockers role handler file
 ---
+- name: restart docker
+  service: name=docker state=restarted
